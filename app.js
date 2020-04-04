@@ -1,43 +1,60 @@
-//const validator = require('validator')
-//const fs = require('fs')
-const chalk = require('chalk')
 const yargs = require('yargs')
-//const add = require('./utils.js')
 const notesReader = require('./notes.js')
 
-//fs.writeFileSync('Hello.txt', 'Hello my name is Stephen')
-//fs.appendFileSync('Hello.txt', ' Gay')
+yargs.version('1.1.0')
 
-//const string = notesReader()
-//const sum = add(4,5)
-//console.log(sum)
-//console.log(string)
-//console.log(validator.isEmail('andrew/example.com'))
-//console.log(chalk.green.bold.inverse.italic('Success!'))
-//console.log(chalk.green.bold.inverse.italic('Success!'))
+yargs.command({
+    command:'add',
+    describe: 'Add a new note',
+    builder: {
+        title:{
+            describe: 'Note Title',
+            demandOption: true,
+            type: 'string'
+        },
 
+        body:{
+            describe: 'Note Body',
+            demandOption: true,
+            type: 'string'
+        }
+    },
 
-/* Challenge: Append a message to notes.txt
-1 Use appendFileSync to append to a file
-2 Run the script
-3 Check your work by opening the file and viewing the appended text
-*/
+    handler: function(argv){
+        notesReader.addNote(argv.title, argv.body)
+    }
+})
 
+yargs.command({
+    command:'remove',
+    describe: 'Remove a note',
+    builder: {
+        title:{
+            describe: 'Note Title',
+            demandOption: true,
+            type: 'string'
+        }
+    },
 
-/* Challenge: Use the chalk library in your project
-1 Install version 2.4.1 of chalk
-2 Load chalk into app.js
-3 Use it to print the string "Success" to the console in green
-4 Test your work
-Bonus: Use docs to mess around with other styles. Make text bold and inverted.
-*/
+    handler: function(argv){
+        notesReader.removeNote(argv.title)
+    }
+})
 
-console.log(process.argv)
-//How to access arg arguments given into command
-const command = process.argv[2]
+yargs.command({
+    command:'list',
+    describe: 'Listing the notes',
+    handler: function(){
+        console.log('Showing a notes list!')
+    }
+})
 
-if(command === 'add'){
-    console.log('Adding note!')
-} else if(command === 'remove'){
-    console.log('Removing note!')
-}
+yargs.command({
+    command:'read',
+    describe: 'Reading a note',
+    handler: function(){
+        console.log('Opened note!')
+    }
+})
+
+yargs.parse()
